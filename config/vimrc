@@ -1,0 +1,112 @@
+"Setting up Vundle, to manage vim plugins. This was mostly copied from Vundle's github page.
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+"let Vundle manage Vundle
+Plugin 'VundleVim/Vundle.vim'
+
+"adds syntax highlighting for Kotlin
+Plugin 'udalov/kotlin-vim'
+
+
+Plugin 'tpope/vim-rails'
+
+
+Plugin 'othree/html5.vim'
+
+"adds emmet to vim. Super useful for writing html code
+Plugin 'mattn/emmet-vim'
+
+"adds a toggleable filetree. This is basically needed.
+Plugin 'scrooloose/nerdtree'
+
+"color previews
+Plugin 'gko/vim-coloresque'
+
+"plugin for shortcuts for formatting quotes, html tags, etc.
+Plugin 'tpope/vim-surround'
+
+"command-t
+Plugin 'wincent/command-t'
+
+"deoplete
+"Plugin 'shougo/deoplete.nvim'
+"Plugin 'roxma/nvim-yarp'
+"Plugin 'roxma/vim-hug-neovim-rpc'
+
+"all plugins must be added before this line
+call vundle#end()
+filetype plugin indent on
+"done setting up vundle
+
+
+"These are simply config choices I like.
+
+"show line numbers
+set number 
+
+"automatically match indentation of the previous line, when making a new one.
+set autoindent
+
+" Return to last edit position when opening files (You want this!) I stole this from some github page. Idk how it works.
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+
+"turn backups off, your code should be saved by Git or some inferior version control system.
+set nobackup
+set nowb
+set noswapfile
+
+syntax on
+try
+	"colorscheme dracula
+	"colorscheme plumber-dark
+	colorscheme monokai
+	"colorscheme sierra
+catch
+endtry
+
+"Sets vim to split to the right or below. Vim's defaults are just unnatural.
+set splitbelow
+set splitright
+
+"Ctrl+\ will open/close the filetree
+map <C-\> :NERDTreeToggle <CR>
+"automatically open the file tree, if you open vim without specifiying a file.
+"Meaning you cd into your desired directory, and then launch vim, by just typing "vim"
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+"alternatively just automatically open the file tree whenever vim is opened
+"autocmd vimenter * NERDTree
+
+"close vim if the filetree is the only window left open
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+"Key Maps"
+"inserts a hash rocket. Useful for ruby devs
+imap <c-l> <space>=><space>
+"maps a ruby html tag, for .html.erb files. Useful for rails devs
+imap <c-a> <%=<space><space><space>%>
+
+
+"Basically a lorem ipsum generator, that doesn't use lorem ipsum.
+imap <C-n> <tab>Le tramway jaune avance lentement dans le brouillard laiteux et surchauffé de cette fin d'après-midi d'été. Le trafic s’écoule sous la canicule, se disperse et se répand dans les mille recoins de Budapest. La ville piétine et les enfants assiègent les marchands de glace. La voiture passe au loin, tourne sur les grands boulevards, longe une avenue et débouche sur le pont Elisabeth. Suspendu dans le vide, acrobate au fil des ans et de l’eau qui passent, le monument traverse le fleuve en une enjambée majestueuse, rétablissant le lien séculaire entre la ville bourgeoise de Pest et les collines royales de Buda. Sous le pont passe un hydroglisseur, il arrive de Vienne enrobé d’un cocon d’argent, milliards de gouttes d’eau qui brillent dans l’air surchauffé, d’où émergent en virevoltant les mouettes du Danube. Le Saint-Cloud de la Hongrie est plus haut, plus aride et plus difficile d’accès que celui de Paris. Bientôt la voiture est obligée de s’arrêter et on continue à pied pour arriver au point le plus culminant du mont Gellért, à cinq cents mètres d’altitude au cœur de la citadelle. On découvre alors la Ville, avec comme seul garde-fou les remparts de la fortification. Tout Budapest est là, séparée en deux par le large ruban argenté du Danube. Au nord, on devine l’île Marguerite, ses palaces et ses piscines. Les touristes y sirotent un peu de fraîcheur palpable qui vient des raisins du mont Tokaj. Plus près, comme des dentelles précieuses, le Parlement et le Château se font face de chaque côté du pont suspendu. Bientôt, le soleil se couche derrière Buda et les lumières de la cité scintillent de mille feux. On se perd alors dans les rues médiévales du Château, à la rencontre de l’inconnu, du vin qui enivre, de la musique qui enchante, et de la cuisine parfumée au paprika. Les violons jouent en sourdine autour des tables et les costumes du pays dansent la sarabande au rythme endiablé du Csárdás. Dans la nuit chaude, chargée d'électricité, dans la ville devenue féerie illuminée, pendant qu’un cymbalum égrène précieusement ses notes, indifférent à la fête et aux rêves, le tramway jaune attend son heure.<return><return>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Integer diam augue, egestas quis, aliquam ut, venenatis ut, quam. Quisque ut augue. Integer non neque a lectus venenatis fermentum. Morbi quis eros nec elit molestie vehicula. Integer nunc lacus, sodales posuere, rutrum quis, blandit at, mi. Vivamus imperdiet wisi vel mauris. Morbi mattis ante non metus. Sed turpis dui, fermentum ut, aliquam eget, vulputate ullamcorper, pede. Nam non dolor. Etiam lobortis, urna id bibendum convallis, ligula augue auctor eros, a dictum sapien mi a tellus. Proin vel justo. Nunc malesuada turpis a sapien.
+
+"Mulipurpose tab key
+function! InsertTabWrapper()
+	let col = col('.') - 1
+	if !col || getline('.')[col - 1] !~ '\k'
+		return "\<tab>"
+	else
+		return "\<c-p>"
+	endif
+endfunction
+
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <s-tab> <c-n>
